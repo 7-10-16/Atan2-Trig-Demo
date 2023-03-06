@@ -1,0 +1,96 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<title>Eye in a Socket</title>
+	<style type="text/css">
+		body {
+      background-image: url("https://images-wixmp-ed30a86b8c4ca887773594c2.wixmp.com/f/b205995c-0d8e-4e1b-8d07-dc2f6e1490c8/dbck6rc-24139a42-0f4b-4df7-9201-803ce1f16dca.jpg?token=eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJ1cm46YXBwOjdlMGQxODg5ODIyNjQzNzNhNWYwZDQxNWVhMGQyNmUwIiwiaXNzIjoidXJuOmFwcDo3ZTBkMTg4OTgyMjY0MzczYTVmMGQ0MTVlYTBkMjZlMCIsIm9iaiI6W1t7InBhdGgiOiJcL2ZcL2IyMDU5OTVjLTBkOGUtNGUxYi04ZDA3LWRjMmY2ZTE0OTBjOFwvZGJjazZyYy0yNDEzOWE0Mi0wZjRiLTRkZjctOTIwMS04MDNjZTFmMTZkY2EuanBnIn1dXSwiYXVkIjpbInVybjpzZXJ2aWNlOmZpbGUuZG93bmxvYWQiXX0.ZtKDBcYcyuJXIbmY9sgok3qqli3EvSRrbyUi6QtEoow");
+        background-size: cover;
+        background-repeat: no-repeat;
+        margin: 0;
+		}
+
+		#container {
+			width: 400px;
+			height: 200px;
+			margin: 250px auto;
+      margin-left: 830px;
+			position: relative;
+			border: 2px solid black;
+			border-radius: 50%;
+			background-color: white;
+		}
+
+		.iris {
+			position: absolute;
+			width: 40px;
+			height: 40px;
+			background-color: black;
+			border-radius: 50%;
+			top: 50%;
+			left: 50%;
+			margin-top: -20px;
+			margin-left: -20px;
+		}
+
+		#eye {
+			position: absolute;
+			width: 80px;
+			height: 80px;
+			border-radius: 50%;
+			top: 50%;
+			left: 50%;
+			margin-top: -40px;
+			margin-left: -40px;
+		}
+    img{
+      position: absolute;
+      width: 100%;
+    height: 120%;
+   object-fit: cover;
+    }
+
+    
+	</style>
+</head>
+<body>  
+	<div id="container">
+		<div id="eye">
+			<div class="iris"></div>
+		</div>
+	</div>
+
+	<script>
+		var iris = document.querySelector('.iris');
+		var eye = document.querySelector('#eye');
+
+		window.addEventListener('mousemove', updatePosition);
+		window.addEventListener('resize', updatePosition);
+
+		function updatePosition(event) {
+			var eyeRect = eye.getBoundingClientRect();
+
+			// calculate angle of mouse position relative to center of eye
+			var dx = event.clientX - eyeRect.left - eyeRect.width/2;
+			var dy = event.clientY - eyeRect.top - eyeRect.height/2;
+			var angle = Math.atan2(dy, dx);
+
+			// calculate maximum distance of iris from center of eye
+			var radius = eyeRect.width/2 - iris.offsetWidth/2;
+
+			// Update position of iris
+			var x = radius * Math.cos(angle);
+			var y = radius * Math.sin(angle);
+
+			// check if iris is outside of eye
+			if (Math.sqrt(Math.pow(x, 2) + Math.pow(y, 2)) > radius) {
+				var scale = radius / Math.sqrt(Math.pow(x, 2) + Math.pow(y, 2));
+				x *= scale;
+				y *= scale;
+			}
+
+			iris.style.transform = 'translate(' + x + 'px,' + y + 'px)';
+		}
+	</script>
+</body>
+</html>
